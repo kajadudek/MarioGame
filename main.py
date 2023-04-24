@@ -11,10 +11,11 @@ def main():
     pygame.display.set_caption("MarioGame")
     pygame.display.set_icon(icon)
     clock = pygame.time.Clock()
+    start_time = pygame.time.get_ticks()
 
     mario = Player(10, 590, 16, 16)
     engine = GameEngine(surface, mario)
-    engine.check_for_collision_blocks()
+    engine.map_setup()
 
     while True:
         clock.tick(FPS)
@@ -24,6 +25,11 @@ def main():
         engine.check_if_collision(mario)
         engine.draw()
         engine.check_for_event()
+
+        if start_time:
+            time_since_enter = (pygame.time.get_ticks() - start_time)//1000
+            message = 'TIME: ' + str(time_since_enter)
+            surface.blit(FONT.render(message, True, TEXT_COLOR), (20,20))
 
 
 if __name__ == "__main__":

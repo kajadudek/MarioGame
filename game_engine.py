@@ -7,6 +7,7 @@ from Background.Coin import Coin
 from Background.MysteryTile import MysteryTile
 from Player.Goomba import Goomba
 from setup import *
+from time import sleep
 
 from Background.Tile import Tile
 
@@ -16,12 +17,14 @@ class GameEngine:
         self.screen = screen
         self.player = player
         self.list_of_objects = []
+        self.enemies = []
         self.f = open('./Background/map.json')
         self.data = json.load(self.f)
         self.screen_boundary = 0
         self.camera_speed = 0
         self.map_width = WINDOW_WIDTH
-        self.enemy = Goomba(500, 200, 16, 16)
+        self.enemy_screen_boundary = 0
+        self.collected_coins = 0
 
     def draw(self):
 
@@ -48,9 +51,13 @@ class GameEngine:
         # Draw player
         self.player.draw(self.screen)
 
-        self.enemy.update_player()
-        self.check_for_collision(self.enemy)
-        self.enemy.draw(self.screen, self.screen_boundary)
+        for i in range(len(self.enemies)):
+            self.enemies[i].update_player()
+            self.check_for_enemy_collision(self.enemies[i])
+            self.enemies[i].draw(self.screen, self.screen_boundary)
+
+        message = "COINS: " + str(self.collected_coins)
+        self.screen.blit(FONT.render(message, True, TEXT_COLOR), (90, 20))
 
     def check_for_event(self):
         events = pygame.event.get()
@@ -68,6 +75,9 @@ class GameEngine:
 
     def input_handler(self):
         pressed_key = pygame.key.get_pressed()
+
+        if not self.player.active:
+            return
 
         if pressed_key[K_LEFT]:
             if self.player.moving_screen:
@@ -89,7 +99,7 @@ class GameEngine:
             self.player.x = 0
             self.camera_speed = 0
 
-    def check_for_collision_blocks(self):
+    def map_setup(self):
         for i in self.data['map']['objects']['ground_tile']:
             tile = Tile(i)
             tile.draw(self.screen, self.screen_boundary)
@@ -106,6 +116,10 @@ class GameEngine:
             tile = Coin(i)
             tile.draw(self.screen, self.screen_boundary)
             self.list_of_objects.append(tile)
+
+        for i in self.data['map']['enemies']['goomba']:
+            enemy = Goomba(i[0], i[1], 50, 50)
+            self.enemies.append(enemy)
 
     def check_if_collision(self, player):
         player_obj = player.rect
@@ -142,36 +156,62 @@ class GameEngine:
                     if block.collision:
                         player_obj.top = block_obj.bottom
                         player.hit_head()
+                        self.collected_coins = block.update_coins(self.collected_coins)
                         block.hit()
                     else:
                         collect = True
 
                 if collect:
+                    self.collected_coins = block.update_coins(self.collected_coins)
                     self.list_of_objects.remove(block)
 
-    def check_for_collision(self, enemy):
-        player_obj = enemy.rect
+    def check_for_enemy_collision(self, enemy):
+        # Create temporary rect object, that allows us use colliderect, that has borders of enemy
+        # Due to enemy constantly moving and moving screen, we need to create such object
+        enemy_obj = pygame.Rect(enemy.rect.x - self.screen_boundary,
+                                enemy.rect.y,
+                                enemy.rect.height,
+                                enemy.rect.width)
 
         for i, block in enumerate(self.list_of_objects):
             block_obj = block.rect
 
-            if block_obj.colliderect(player_obj):
+            if block_obj.colliderect(enemy_obj):
 
-                # Player hitting the top of the object - do not change direction because of the tile beneath
-                if abs(block_obj.top - player_obj.bottom) < FALL_COLLISION_TOLERANCE:
+                # Enemy hitting the top of the object - do not change direction because of the tile beneath
+                if abs(block_obj.top - enemy_obj.bottom) < FALL_COLLISION_TOLERANCE:
                     if block.collision:
-                        player_obj.bottom = block_obj.top
+                        enemy.rect.bottom = block_obj.top
                         enemy.landed()
-                        continue
 
                 # Collision from both sides of the object
-                if abs(block_obj.left - player_obj.right) < 5:
+                elif abs(block_obj.left - enemy_obj.right) < COLLISION_TOLERANCE:
                     if block.collision:
                         enemy.move(-ENEMY_SPEED, 0)
                         enemy.hit()
 
-                elif abs(block_obj.right - player_obj.left) < 5:
+                elif abs(block_obj.right - enemy_obj.left) < COLLISION_TOLERANCE:
                     if block.collision:
                         enemy.move(ENEMY_SPEED, 0)
                         enemy.hit()
 
+        player_obj = self.player.rect
+        if enemy_obj.colliderect(player_obj):
+
+            # Player hitting the top of the enemy - enemy's death
+            if abs(enemy_obj.top + 16 - player_obj.bottom) < COLLISION_TOLERANCE:
+                enemy.active = False
+                player_obj.bottom = enemy_obj.top + 16
+                self.player.landed()
+                return
+
+            # Collision from both sides of the object - player's death
+            elif abs(enemy_obj.left - player_obj.right) < COLLISION_TOLERANCE:
+                self.player.move(-PLAYER_SPEED, 0)
+                if enemy.active:
+                    self.player.death()
+
+            elif abs(enemy_obj.right - player_obj.left) < COLLISION_TOLERANCE:
+                self.player.move(PLAYER_SPEED, 0)
+                if enemy.active:
+                    self.player.death()

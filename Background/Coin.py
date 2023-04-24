@@ -51,3 +51,8 @@ class Coin(Tile):
 
     def hit(self):
         self.active = False
+
+    def update_coins(self, coins):
+        if self.active:
+            return coins+1
+        return coins

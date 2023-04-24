@@ -52,6 +52,7 @@ class Player:
         self.fall_count = 0
         self.jump_count = 0
         self.moving_screen = False
+        self.active = True
         self.sprites = load_sprites(width, height)
 
     def jump(self):
@@ -74,6 +75,9 @@ class Player:
         self.x += dx
 
     def update_player(self):
+        if not self.active:
+            return
+
         self.y_vel += min(0.8, (self.fall_count / 60) * GRAVITY)
         self.move(0, self.y_vel)
         self.update_sprite()
@@ -109,5 +113,8 @@ class Player:
         self.animation_count += 1
         self.rect = self.sprite.get_rect(topleft=(self.rect.x, self.rect.y))
 
-    def draw(self, win, screen_boundary = 0):
-        win.blit(self.sprite, (self.rect.x, self.rect.y))
+    def draw(self, win, screen_boundary=0):
+        win.blit(self.sprite, (self.rect.x - screen_boundary, self.rect.y))
+
+    def death(self):
+        self.active = False

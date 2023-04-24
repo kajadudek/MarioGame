@@ -1,5 +1,6 @@
 # general settings
 import pygame.image
+pygame.font.init()
 
 WINDOW_WIDTH = 900 # 60 x 15
 WINDOW_HEIGHT = 720 # 60 x 12
@@ -11,6 +12,8 @@ icon = pygame.image.load('./assets/MarioIcon.png')
 # background settings
 TILE_SIZE = (60, 60)
 COIN_SIZE = (30, 40)
+FONT = pygame.font.SysFont("Sans", 20)
+TEXT_COLOR = (0, 0, 0)
 
 # objects settings
 PLAYER_SPEED = 4

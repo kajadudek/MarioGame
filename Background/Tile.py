@@ -25,3 +25,6 @@ class Tile:
 
     def hit(self):
         pass
+
+    def update_coins(self, coins):
+        return coins
