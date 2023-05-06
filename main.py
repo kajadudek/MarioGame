@@ -31,8 +31,13 @@ def main():
             message = 'TIME: ' + str(time_since_enter)
             surface.blit(FONT.render(message, True, TEXT_COLOR), (20,20))
 
+        if mario.restart:
+            mario = Player(10, 590, 16, 16)
+            engine = GameEngine(surface, mario)
+            engine.map_setup()
+            start_time = pygame.time.get_ticks()
+            mario.restart = False
+
 
 if __name__ == "__main__":
     main()
-    print("There will be Mario game project")
-

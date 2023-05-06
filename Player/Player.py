@@ -1,3 +1,5 @@
+import time
+
 import pygame.draw
 from os.path import join
 import pygame
@@ -54,9 +56,13 @@ class Player:
         self.moving_screen = False
         self.active = True
         self.sprites = load_sprites(width, height)
+        self.restart = False
 
-    def jump(self):
-        self.y_vel -= GRAVITY * 6
+        self.walk_sprite_coords = (296, 332, 19)
+        self.dead_enemy_sprite_coords = (0, 0, 0)
+
+    def jump(self, height=6):
+        self.y_vel -= GRAVITY * height
         self.jump_count += 1
         if self.jump_count == 1:
             self.fall_count = 0
@@ -116,5 +122,24 @@ class Player:
     def draw(self, win, screen_boundary=0):
         win.blit(self.sprite, (self.rect.x - screen_boundary, self.rect.y))
 
-    def death(self):
+    def game_over(self, screen):
+        srf = pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT))
+        srf.set_colorkey((255, 255, 255), pygame.RLEACCEL)
+        srf.set_alpha(128)
+
+        if self.active:
+            for i in range(500, 20, -2):
+                srf.fill((0, 0, 0))
+                pygame.draw.circle(
+                    srf,
+                    (255, 255, 255),
+                    (self.rect.x + 21, self.rect.y + 16),
+                    i,
+                )
+                screen.blit(srf, (0, 0))
+                pygame.display.update()
+
+            time.sleep(0.5)
         self.active = False
+        self.restart = True
+

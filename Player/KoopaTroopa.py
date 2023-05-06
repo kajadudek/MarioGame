@@ -1,10 +1,11 @@
 from os.path import join
 
 from Player.Enemy import Enemy
+from Player.Player import flip
 from setup import *
 
 
-class Goomba(Enemy):
+class KoopaTroopa(Enemy):
     def __init__(self, x, y, width, height):
         super().__init__(x, y, width, height)
         self.height = height
@@ -13,7 +14,7 @@ class Goomba(Enemy):
         self.sprites = self.load_sprites()
         self.update_sprite()
         self.onScreen = False
-        self.points = 100
+        self.points = 50
 
     def load_sprites(self):
         image = "characters.gif"
@@ -25,19 +26,20 @@ class Goomba(Enemy):
 
         # Walk sprite
         for i in range(*self.walk_sprite_coords):
-            surface = pygame.Surface((16, 16), pygame.SRCALPHA, 32)
-            rect = pygame.Rect(i, 187, 16, 16)
+            surface = pygame.Surface((16, 25), pygame.SRCALPHA, 32)
+            rect = pygame.Rect(i, 206, 16, 25)
             surface.blit(sprite_sheet, (0, 0), rect)
 
             sprites.append(pygame.transform.scale(surface, (self.width, self.height)))
 
-        all_sprites[image.replace(".gif", "") + "_walk"] = sprites
+        all_sprites[image.replace(".gif", "") + "_walk_right"] = sprites
+        all_sprites[image.replace(".gif", "") + "_walk_left"] = flip(sprites)
 
         sprites = []
 
         # Dead goomba
-        surface = pygame.Surface((16, 12), pygame.SRCALPHA, 32)
-        rect = pygame.Rect(277, 191, 16, 12)
+        surface = pygame.Surface((16, 16), pygame.SRCALPHA, 32)
+        rect = pygame.Rect(333, 214, 16, 18)
         surface.blit(sprite_sheet, (0, 0), rect)
         sprites.append(pygame.transform.scale(surface, (50, 40)))
 
@@ -45,11 +47,29 @@ class Goomba(Enemy):
 
         return all_sprites
 
+    def update_sprite_sheet_name(self, sprite_sheet):
+        if self.active:
+            sprite_sheet += "_walk"
+
+            if self.direction == "left":
+                sprite_sheet += "_left"
+            else:
+                sprite_sheet += "_right"
+
+        else:
+            sprite_sheet += "_dead"
+
     def update_sprite(self):
         sprite_sheet = "characters"
 
         if self.active:
             sprite_sheet += "_walk"
+
+            if self.direction == "left":
+                sprite_sheet += "_left"
+            else:
+                sprite_sheet += "_right"
+
         else:
             sprite_sheet += "_dead"
 
