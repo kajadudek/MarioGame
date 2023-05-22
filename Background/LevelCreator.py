@@ -2,6 +2,7 @@ import json
 from os.path import join
 
 from Background.Castle import Castle
+from Background.Pipe import Pipe
 from setup import *
 
 from Background.Coin import Coin
@@ -12,11 +13,12 @@ from Player.KoopaTroopa import KoopaTroopa
 
 
 class LevelCreator:
-    def __init__(self, screen, lvl):
+    def __init__(self, screen, lvl, player):
         self.screen = screen
         self.map_width = 0
         self.list_of_objects = []
         self.enemies = []
+        self.player = player
         map_name = "map_" + str(lvl) + ".json"
         map_path = join("./assets", "Maps", map_name)
         self.f = open(map_path)
@@ -42,8 +44,13 @@ class LevelCreator:
             tile.draw(self.screen)
             self.list_of_objects.append(tile)
 
+        for coords in self.data['map']['objects']['pipes']:
+            tile = Pipe(coords)
+            tile.draw(self.screen)
+            self.list_of_objects.append(tile)
+
         for coords in self.data['map']['objects']['castle']:
-            castle = Castle(coords)
+            castle = Castle(coords, self.player)
             self.list_of_objects.append(castle)
 
         for coords in self.data['map']['enemies']['goomba']:

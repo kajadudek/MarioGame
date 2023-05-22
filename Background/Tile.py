@@ -13,6 +13,7 @@ class Tile:
         self.rect = self.img.get_rect()
         self.width = TILE_SIZE[0]
         self.height = TILE_SIZE[1]
+        self.points = 0
 
     def draw(self, screen, screen_boundary=0):
         self.rect.x = self.coordinates[0] * TILE_SIZE[0] - screen_boundary

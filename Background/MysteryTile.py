@@ -11,36 +11,11 @@ class MysteryTile(Tile):
         self.animation_count = 0
         self.sprites = self.load_sprites()
         self.active = True
+        self.points = 50
+        self.sound = SoundPlayer
 
     def load_sprites(self):
-        image = "tiles.png"
-        path = join(".", "assets", "Background", image)
-        sprite_sheet = pygame.image.load(path).convert_alpha()
-        all_sprites = {}
-
-        sprites = []
-
-        # Mystery tile sprite
-        for i in range(384, 417, 16):
-            y = 0
-            surface = pygame.Surface((16, 16), pygame.SRCALPHA, 32)
-            rect = pygame.Rect(i, y, self.width, self.height)
-            surface.blit(sprite_sheet, (0, 0), rect)
-            sprites.append(pygame.transform.scale(surface, (self.width, self.height)))
-
-        all_sprites[image.replace(".png", "") + "_coin_inside"] = sprites
-
-        sprites = []
-
-        # Deactivated tile sprite
-        surface = pygame.Surface((16, 16), pygame.SRCALPHA, 32)
-        rect = pygame.Rect(432, 0, self.width, self.height)
-        surface.blit(sprite_sheet, (0, 0), rect)
-        sprites.append(pygame.transform.scale(surface, (self.width, self.height)))
-
-        all_sprites[image.replace(".png", "") + "_deactivated"] = sprites
-
-        return all_sprites
+        return SpriteLoader.mystery_tile_sprites(self.width, self.height)
 
     def update_sprite(self):
         sprite_sheet = "tiles"
@@ -62,5 +37,6 @@ class MysteryTile(Tile):
 
     def update_coins(self, coins):
         if self.active:
+            self.sound.play(self.sound.coin)
             return coins+1
         return coins

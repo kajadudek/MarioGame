@@ -6,43 +6,6 @@ import pygame
 from setup import *
 
 
-def flip(sprites):
-    return [pygame.transform.flip(sprite, True, False) for sprite in sprites]
-
-
-def load_sprites(width, height):
-    image = "MarioSprite.png"
-    path = join("./assets", "Player", image)
-    sprite_sheet = pygame.image.load(path).convert_alpha()
-    all_sprites = {}
-
-    sprites = []
-
-    # Running sprite
-    for i in range(240, 330, 30):
-        y = 0
-        surface = pygame.Surface((width, height), pygame.SRCALPHA, 32)
-        rect = pygame.Rect(i, y, width, height)
-        surface.blit(sprite_sheet, (0, 0), rect)
-        sprites.append(pygame.transform.scale(surface, (50, 50)))
-
-    all_sprites[image.replace(".png", "") + "_run_right"] = sprites
-    all_sprites[image.replace(".png", "") + "_run_left"] = flip(sprites)
-
-    sprites = []
-
-    # Idle sprite
-    surface = pygame.Surface((width, height), pygame.SRCALPHA, 32)
-    rect = pygame.Rect(210, 0, width, height)
-    surface.blit(sprite_sheet, (0, 0), rect)
-    sprites.append(pygame.transform.scale(surface, (50, 50)))
-
-    all_sprites[image.replace(".png", "") + "_idle_right"] = sprites
-    all_sprites[image.replace(".png", "") + "_idle_left"] = flip(sprites)
-
-    return all_sprites
-
-
 class Player:
     def __init__(self, x, y, width, height):
         self.sprite = None
@@ -50,13 +13,15 @@ class Player:
         self.x = 0
         self.y_vel = 0
         self.direction = "right"
+        self.win = False
         self.animation_count = 0
         self.fall_count = 0
         self.jump_count = 0
         self.moving_screen = False
         self.active = True
-        self.sprites = load_sprites(width, height)
+        self.sprites = SpriteLoader.player_sprites(width, height)
         self.restart = False
+        self.sound = SoundPlayer
 
         self.walk_sprite_coords = (296, 332, 19)
         self.dead_enemy_sprite_coords = (0, 0, 0)
@@ -66,6 +31,9 @@ class Player:
         self.jump_count += 1
         if self.jump_count == 1:
             self.fall_count = 0
+
+        if height == 6:
+            self.sound.play(self.sound.jump)
 
     def move(self, dx, dy):
         if self.rect.x + dx < 0:
@@ -81,9 +49,6 @@ class Player:
         self.x += dx
 
     def update_player(self):
-        if not self.active:
-            return
-
         self.y_vel += min(0.8, (self.fall_count / 60) * GRAVITY)
         self.move(0, self.y_vel)
         self.update_sprite()
@@ -106,7 +71,9 @@ class Player:
     def update_sprite(self):
         sprite_sheet = "MarioSprite"
 
-        if self.x != 0:
+        if self.jump_count > 0:
+            sprite_sheet += "_jump"
+        elif self.x != 0:
             sprite_sheet += "_run"
         else:
             sprite_sheet += "_idle"
@@ -123,23 +90,23 @@ class Player:
         win.blit(self.sprite, (self.rect.x - screen_boundary, self.rect.y))
 
     def game_over(self, screen):
-        srf = pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT))
-        srf.set_colorkey((255, 255, 255), pygame.RLEACCEL)
-        srf.set_alpha(128)
+        surface = pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT))
+        surface.set_colorkey((255, 255, 255), pygame.RLEACCEL)
+        surface.set_alpha(128)
+        self.sound.music_channel.stop()
+        self.sound.play(self.sound.death)
 
         if self.active:
             for i in range(500, 20, -2):
-                srf.fill((0, 0, 0))
+                surface.fill((0, 0, 0))
                 pygame.draw.circle(
-                    srf,
+                    surface,
                     (255, 255, 255),
                     (self.rect.x + 21, self.rect.y + 16),
-                    i,
-                )
-                screen.blit(srf, (0, 0))
+                    i)
+                screen.blit(surface, (0, 0))
                 pygame.display.update()
 
             time.sleep(0.5)
         self.active = False
         self.restart = True
-
