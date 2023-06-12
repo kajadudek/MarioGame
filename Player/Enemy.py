@@ -1,7 +1,3 @@
-from os.path import join
-
-import pygame
-
 from Player.Player import Player
 from setup import *
 
@@ -40,6 +36,9 @@ class Enemy(Player):
                 self.hit()
             else:
                 self.onScreen = True
+
+            if self.rect.x < 1:
+                self.hit()
             win.blit(self.sprite, (self.rect.x - screen_boundary, self.rect.y))
         else:
             pass

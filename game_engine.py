@@ -3,7 +3,6 @@ import pygame
 from pygame import *
 from time import sleep
 
-from Background.Castle import Castle
 from Utilities.Collider import Collider
 from setup import *
 from Background.LevelCreator import LevelCreator
