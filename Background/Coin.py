@@ -1,9 +1,11 @@
-from os.path import join
-
-import self as self
-
 from Background.Tile import Tile
-from setup import *
+from setup import (
+    SoundPlayer,
+    SpriteLoader,
+    COIN_SIZE,
+    ANIMATION_DELAY,
+    TILE_SIZE,
+)
 
 
 class Coin(Tile):
@@ -22,12 +24,15 @@ class Coin(Tile):
         sprite_sheet = "tiles_coin"
 
         sprites = self.sprites[sprite_sheet]
-        sprite_index = (self.animation_count //
-                        ANIMATION_DELAY) % len(sprites)
+        sprite_index = (self.animation_count // ANIMATION_DELAY) % len(sprites)
         self.sprite = sprites[sprite_index]
         self.animation_count += 1
-        self.rect = self.sprite.get_rect(topleft=(self.rect.x + (TILE_SIZE[0] - COIN_SIZE[0]) / 2,
-                                                  self.rect.y + (TILE_SIZE[0] - COIN_SIZE[0]) / 2))
+        self.rect = self.sprite.get_rect(
+            topleft=(
+                self.rect.x + (TILE_SIZE[0] - COIN_SIZE[0]) / 2,
+                self.rect.y + (TILE_SIZE[0] - COIN_SIZE[0]) / 2,
+            )
+        )
 
     def hit(self):
         self.active = False

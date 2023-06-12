@@ -1,7 +1,5 @@
-from os.path import join
-
 from Player.Enemy import Enemy
-from setup import *
+from setup import SpriteLoader, ENEMY_ANIMATION_DELAY, ENEMY_SPEED
 
 
 class KoopaTroopa(Enemy):
@@ -46,8 +44,9 @@ class KoopaTroopa(Enemy):
 
         sprite_sheet_name = sprite_sheet
         sprites = self.sprites[sprite_sheet_name]
-        sprite_index = (self.animation_count //
-                        ENEMY_ANIMATION_DELAY) % len(sprites)
+        sprite_index = (self.animation_count // ENEMY_ANIMATION_DELAY) % len(
+            sprites
+        )
         self.sprite = sprites[sprite_index]
         self.animation_count += 1
         if self.direction == "right" and self.active:

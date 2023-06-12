@@ -3,7 +3,7 @@ import pygame
 from MenuScreens.menu import Menu
 from Player.Player import Player
 from game_engine import GameEngine
-from setup import *
+from setup import WINDOW_WIDTH, WINDOW_HEIGHT, icon, FPS, BACKGROUND_COLOR
 
 
 def main():

@@ -1,11 +1,11 @@
 import pygame
 
-from setup import *
+from setup import TILE_SIZE
 
 
 class Tile:
     def __init__(self, coordinates):
-        self.img = pygame.image.load('./assets/Background/ground_tile.png')
+        self.img = pygame.image.load("./assets/Background/ground_tile.png")
         self.img = pygame.transform.scale(self.img, TILE_SIZE)
         self.collision = True
         self.coordinates = coordinates

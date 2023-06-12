@@ -1,7 +1,6 @@
 from os.path import join
 
 import pygame
-from setup import *
 from Background.Tile import Tile
 
 

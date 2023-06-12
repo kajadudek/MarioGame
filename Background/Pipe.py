@@ -1,7 +1,6 @@
 from os.path import join
 
 import pygame
-from setup import *
 from Background.Tile import Tile
 
 
@@ -28,4 +27,6 @@ class Pipe(Tile):
         return pygame.transform.scale(surface, (100, 240))
 
     def update_sprite(self):
-        self.rect = self.sprite.get_rect(topleft=(self.rect.x + 10, self.rect.y))
+        self.rect = self.sprite.get_rect(
+            topleft=(self.rect.x + 10, self.rect.y)
+        )

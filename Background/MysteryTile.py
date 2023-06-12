@@ -1,7 +1,4 @@
-from os.path import join
-
-import pygame
-from setup import *
+from setup import SoundPlayer, SpriteLoader, ANIMATION_DELAY
 from Background.Tile import Tile
 
 
@@ -26,8 +23,7 @@ class MysteryTile(Tile):
             sprite_sheet += "_deactivated"
 
         sprites = self.sprites[sprite_sheet]
-        sprite_index = (self.animation_count //
-                        ANIMATION_DELAY) % len(sprites)
+        sprite_index = (self.animation_count // ANIMATION_DELAY) % len(sprites)
         self.sprite = sprites[sprite_index]
         self.animation_count += 1
         self.rect = self.sprite.get_rect(topleft=(self.rect.x, self.rect.y))
@@ -38,5 +34,5 @@ class MysteryTile(Tile):
     def update_coins(self, coins):
         if self.active:
             self.sound.play(self.sound.coin)
-            return coins+1
+            return coins + 1
         return coins

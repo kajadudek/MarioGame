@@ -1,5 +1,14 @@
+import pygame
+
 from Background.Castle import Castle
-from setup import *
+from setup import (
+    SoundPlayer,
+    WINDOW_HEIGHT,
+    FALL_COLLISION_TOLERANCE,
+    PLAYER_SPEED,
+    COLLISION_TOLERANCE,
+    ENEMY_SPEED,
+)
 
 
 class Collider:
@@ -23,9 +32,11 @@ class Collider:
             collect = False
 
             if block_obj.colliderect(player_obj):
-
                 # Collision from both sides of the object
-                if abs(block_obj.left - player_obj.right) < FALL_COLLISION_TOLERANCE:
+                if (
+                    abs(block_obj.left - player_obj.right)
+                    < FALL_COLLISION_TOLERANCE
+                ):
                     if block.collision:
                         self.player.move(-PLAYER_SPEED, 0)
 
@@ -37,7 +48,10 @@ class Collider:
                     else:
                         collect = True
 
-                elif abs(block_obj.right - player_obj.left) < FALL_COLLISION_TOLERANCE:
+                elif (
+                    abs(block_obj.right - player_obj.left)
+                    < FALL_COLLISION_TOLERANCE
+                ):
                     if block.collision:
                         self.player.move(PLAYER_SPEED, 0)
 
@@ -45,7 +59,10 @@ class Collider:
                         collect = True
 
                 # Player hitting the top of the object
-                elif abs(block_obj.top - player_obj.bottom) < FALL_COLLISION_TOLERANCE:
+                elif (
+                    abs(block_obj.top - player_obj.bottom)
+                    < FALL_COLLISION_TOLERANCE
+                ):
                     if block.collision:
                         player_obj.bottom = block_obj.top
                         self.player.landed()
@@ -53,57 +70,77 @@ class Collider:
                         collect = True
 
                 # Hitting object from the bottom
-                elif abs(block_obj.bottom - player_obj.top) < COLLISION_TOLERANCE:
+                elif (
+                    abs(block_obj.bottom - player_obj.top)
+                    < COLLISION_TOLERANCE
+                ):
                     if block.collision:
                         player_obj.top = block_obj.bottom
                         self.player.hit_head()
-                        self.collected_coins = block.update_coins(self.collected_coins)
+                        self.collected_coins = block.update_coins(
+                            self.collected_coins
+                        )
                         self.points += block.points
                         block.hit()
                     else:
                         collect = True
 
                 if collect:
-                    self.collected_coins = block.update_coins(self.collected_coins)
+                    self.collected_coins = block.update_coins(
+                        self.collected_coins
+                    )
                     self.list_of_objects.remove(block)
 
         return False
 
     def check_for_enemy_collision(self, enemy, screen_boundary):
-        # Create temporary rect object, that allows us to use colliderect, that has borders of enemy
-        # Due to enemy constantly moving and moving screen, we need to create such object
-        enemy_obj = pygame.Rect(enemy.rect.x - screen_boundary,
-                                enemy.rect.y,
-                                enemy.rect.height,
-                                enemy.rect.width)
+        # Create temporary rect object, that allows us to use colliderect,
+        # that has borders of enemy
+        # Due to enemy constantly moving and moving screen,
+        # we need to create such object
+        enemy_obj = pygame.Rect(
+            enemy.rect.x - screen_boundary,
+            enemy.rect.y,
+            enemy.rect.height,
+            enemy.rect.width,
+        )
 
         for i, block in enumerate(self.list_of_objects):
             block_obj = block.rect
 
             if block_obj.colliderect(enemy_obj):
-
-                # Enemy hitting the top of the object - do not change direction because of the tile beneath
-                if abs(block_obj.top - enemy_obj.bottom) < FALL_COLLISION_TOLERANCE:
+                # Enemy hitting the top of the object - do not change
+                # direction because of the tile beneath
+                if (
+                    abs(block_obj.top - enemy_obj.bottom)
+                    < FALL_COLLISION_TOLERANCE
+                ):
                     if block.collision:
                         enemy.rect.bottom = block_obj.top
                         enemy.landed()
 
                 # Collision from both sides of the object
-                elif abs(block_obj.left - enemy_obj.right) < COLLISION_TOLERANCE:
+                elif (
+                    abs(block_obj.left - enemy_obj.right) < COLLISION_TOLERANCE
+                ):
                     if block.collision:
                         enemy.move(-ENEMY_SPEED, 0)
                         enemy.hit()
 
-                elif abs(block_obj.right - enemy_obj.left) < COLLISION_TOLERANCE:
+                elif (
+                    abs(block_obj.right - enemy_obj.left) < COLLISION_TOLERANCE
+                ):
                     if block.collision:
                         enemy.move(ENEMY_SPEED, 0)
                         enemy.hit()
 
         player_obj = self.player.rect
         if enemy_obj.colliderect(player_obj) and enemy.active:
-
             # Player hitting the top of the enemy - enemy's death
-            if abs(enemy_obj.top + 16 - player_obj.bottom) < COLLISION_TOLERANCE:
+            if (
+                abs(enemy_obj.top + 16 - player_obj.bottom)
+                < COLLISION_TOLERANCE
+            ):
                 enemy.active = False
                 self.sound.play(self.sound.stomp)
                 self.points += enemy.points

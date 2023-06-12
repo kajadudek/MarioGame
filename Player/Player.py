@@ -1,9 +1,15 @@
 import time
 
 import pygame.draw
-from os.path import join
 import pygame
-from setup import *
+from setup import (
+    SpriteLoader,
+    SoundPlayer,
+    GRAVITY,
+    WINDOW_WIDTH,
+    MARIO_ANIMATION_DELAY,
+    WINDOW_HEIGHT,
+)
 
 
 class Player:
@@ -80,8 +86,9 @@ class Player:
 
         sprite_sheet_name = sprite_sheet + "_" + self.direction
         sprites = self.sprites[sprite_sheet_name]
-        sprite_index = (self.animation_count //
-                        MARIO_ANIMATION_DELAY) % len(sprites)
+        sprite_index = (self.animation_count // MARIO_ANIMATION_DELAY) % len(
+            sprites
+        )
         self.sprite = sprites[sprite_index]
         self.animation_count += 1
         self.rect = self.sprite.get_rect(topleft=(self.rect.x, self.rect.y))
@@ -103,7 +110,8 @@ class Player:
                     surface,
                     (255, 255, 255),
                     (self.rect.x + 21, self.rect.y + 16),
-                    i)
+                    i,
+                )
                 screen.blit(surface, (0, 0))
                 pygame.display.update()
 
