@@ -1,5 +1,5 @@
 from Player.Player import Player
-from setup import *
+from setup import WINDOW_WIDTH, ENEMY_ANIMATION_DELAY, ENEMY_SPEED, GRAVITY
 
 
 class Enemy(Player):
@@ -30,8 +30,10 @@ class Enemy(Player):
 
     def draw(self, win, screen_boundary=0):
         if self.counter < 150:
-            if self.rect.x - screen_boundary + self.width < 2 \
-                    or self.rect.x - screen_boundary - 2 > WINDOW_WIDTH:
+            if (
+                self.rect.x - screen_boundary + self.width < 2
+                or self.rect.x - screen_boundary - 2 > WINDOW_WIDTH
+            ):
                 self.onScreen = False
                 self.hit()
             else:
@@ -51,8 +53,9 @@ class Enemy(Player):
 
         sprite_sheet_name = self.update_sprite_sheet_name(sprite_sheet)
         sprites = self.sprites[sprite_sheet_name]
-        sprite_index = (self.animation_count //
-                        ENEMY_ANIMATION_DELAY) % len(sprites)
+        sprite_index = (self.animation_count // ENEMY_ANIMATION_DELAY) % len(
+            sprites
+        )
         self.sprite = sprites[sprite_index]
         self.animation_count += 1
         if self.direction == "right" and self.active:

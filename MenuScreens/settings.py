@@ -1,13 +1,23 @@
-from setup import *
+import pygame
+
+from setup import (
+    TEXT_COLOR,
+    MENU_MARIO_FONT,
+    SoundPlayer,
+    WINDOW_WIDTH,
+    SELECTED_TEXT_COLOR,
+)
 
 
 class Settings:
     def __init__(self):
         self.active = False
         self.current_option = 0
-        self.list_of_options = {"MUSIC:": TEXT_COLOR,
-                                "SOUND EFFECTS:": TEXT_COLOR,
-                                "BACK": TEXT_COLOR}
+        self.list_of_options = {
+            "MUSIC:": TEXT_COLOR,
+            "SOUND EFFECTS:": TEXT_COLOR,
+            "BACK": TEXT_COLOR,
+        }
         self.number_of_options = len(self.list_of_options)
 
     def draw(self, screen):
@@ -26,8 +36,14 @@ class Settings:
             settings[1] = " OFF"
 
         for count, option in enumerate(self.list_of_options):
-            screen.blit(MENU_MARIO_FONT.render(option + settings[count], True, self.list_of_options.get(option)),
-                        ((WINDOW_WIDTH - 500) / 2 + 20, start_pos))
+            screen.blit(
+                MENU_MARIO_FONT.render(
+                    option + settings[count],
+                    True,
+                    self.list_of_options.get(option),
+                ),
+                ((WINDOW_WIDTH - 500) / 2 + 20, start_pos),
+            )
 
             start_pos += 70
 
@@ -52,12 +68,16 @@ class Settings:
             # Select option
             if e.type == pygame.KEYDOWN:
                 if e.key == pygame.K_UP:
-                    self.current_option = (self.current_option - 1) % self.number_of_options
+                    self.current_option = (
+                        self.current_option - 1
+                    ) % self.number_of_options
                     if self.current_option < 0:
                         self.current_option = self.number_of_options - 1
 
                 elif e.key == pygame.K_DOWN:
-                    self.current_option = (self.current_option + 1) % self.number_of_options
+                    self.current_option = (
+                        self.current_option + 1
+                    ) % self.number_of_options
 
                 # Confirm option
                 if e.key == pygame.K_RETURN:

@@ -22,9 +22,9 @@ class Sound:
         self.death = mixer.Sound(path + "death.wav")
         self.kick = mixer.Sound(path + "kick.ogg")
         self.brick_bump = mixer.Sound(path + "brick-bump.ogg")
-        self.powerup = mixer.Sound(path + 'powerup.ogg')
-        self.powerup_appear = mixer.Sound(path + 'powerup_appears.ogg')
-        self.pipe = mixer.Sound(path + 'pipe.ogg')
+        self.powerup = mixer.Sound(path + "powerup.ogg")
+        self.powerup_appear = mixer.Sound(path + "powerup_appears.ogg")
+        self.pipe = mixer.Sound(path + "pipe.ogg")
 
     def play(self, sound):
         if self.soundOn:
