@@ -1,7 +1,6 @@
 from os.path import join
 
 from Player.Enemy import Enemy
-from Player.Player import flip
 from setup import *
 
 
@@ -17,35 +16,7 @@ class KoopaTroopa(Enemy):
         self.points = 50
 
     def load_sprites(self):
-        image = "characters.gif"
-        path = join(".", "assets", "Player", image)
-        sprite_sheet = pygame.image.load(path).convert_alpha()
-        all_sprites = {}
-
-        sprites = []
-
-        # Walk sprite
-        for i in range(*self.walk_sprite_coords):
-            surface = pygame.Surface((16, 25), pygame.SRCALPHA, 32)
-            rect = pygame.Rect(i, 206, 16, 25)
-            surface.blit(sprite_sheet, (0, 0), rect)
-
-            sprites.append(pygame.transform.scale(surface, (self.width, self.height)))
-
-        all_sprites[image.replace(".gif", "") + "_walk_right"] = sprites
-        all_sprites[image.replace(".gif", "") + "_walk_left"] = flip(sprites)
-
-        sprites = []
-
-        # Dead goomba
-        surface = pygame.Surface((16, 16), pygame.SRCALPHA, 32)
-        rect = pygame.Rect(333, 214, 16, 18)
-        surface.blit(sprite_sheet, (0, 0), rect)
-        sprites.append(pygame.transform.scale(surface, (50, 40)))
-
-        all_sprites[image.replace(".gif", "") + "_dead"] = sprites
-
-        return all_sprites
+        return SpriteLoader.koopa_troopa_sprites(self.width, self.height)
 
     def update_sprite_sheet_name(self, sprite_sheet):
         if self.active:
@@ -85,4 +56,3 @@ class KoopaTroopa(Enemy):
             self.rect.x -= ENEMY_SPEED
 
         self.rect = self.sprite.get_rect(topleft=(self.rect.x, self.rect.y))
-
