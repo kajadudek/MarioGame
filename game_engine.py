@@ -37,8 +37,6 @@ class GameEngine:
         self.sound = SoundPlayer
 
     def draw(self):
-        global time_since_enter
-
         # Scrolling background
         if self.player.active:
             if (
@@ -107,6 +105,7 @@ class GameEngine:
                 if e.key == pygame.K_UP and self.player.jump_count < 1:
                     self.player.jump()
 
+    # Check keyboard input
     def input_handler(self):
         pressed_key = pygame.key.get_pressed()
 

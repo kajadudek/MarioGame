@@ -49,21 +49,7 @@ class Enemy(Player):
             self.counter += 1
 
     def update_sprite(self):
-        sprite_sheet = "characters"
-
-        sprite_sheet_name = self.update_sprite_sheet_name(sprite_sheet)
-        sprites = self.sprites[sprite_sheet_name]
-        sprite_index = (self.animation_count // ENEMY_ANIMATION_DELAY) % len(
-            sprites
-        )
-        self.sprite = sprites[sprite_index]
-        self.animation_count += 1
-        if self.direction == "right" and self.active:
-            self.rect.x += ENEMY_SPEED
-        elif self.direction == "left" and self.active:
-            self.rect.x -= ENEMY_SPEED
-
-        self.rect = self.sprite.get_rect(topleft=(self.rect.x, self.rect.y))
+        pass
 
     def update_sprite_sheet_name(self, sprite_sheet):
         pass

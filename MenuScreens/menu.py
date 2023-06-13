@@ -85,6 +85,7 @@ class Menu:
                 start_pos += 70
 
     def check_for_input(self):
+        # If level menu is active - draw it
         if self.levels_screen.active:
             level = self.levels_screen.check_for_input()
 
@@ -95,10 +96,12 @@ class Menu:
                 self.levels_screen.active = False
                 return level
 
+        # If settings menu is active - draw it
         elif self.settings.active:
             if self.settings.check_for_input():
                 self.settings.active = False
 
+        # Otherwise, draw main menu
         else:
             # Change color of selected option
             self.list_of_options[
@@ -119,6 +122,7 @@ class Menu:
 
             events = pygame.event.get()
 
+            # Handle menu control
             for e in events:
                 # Select option
                 if e.type == pygame.KEYDOWN:

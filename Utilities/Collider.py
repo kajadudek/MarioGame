@@ -20,6 +20,7 @@ class Collider:
         self.points = 0
         self.sound = SoundPlayer
 
+    # Player collision
     def check_if_collision(self):
         player_obj = self.player.rect
 

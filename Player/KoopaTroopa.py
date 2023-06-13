@@ -16,18 +16,6 @@ class KoopaTroopa(Enemy):
     def load_sprites(self):
         return SpriteLoader.koopa_troopa_sprites(self.width, self.height)
 
-    def update_sprite_sheet_name(self, sprite_sheet):
-        if self.active:
-            sprite_sheet += "_walk"
-
-            if self.direction == "left":
-                sprite_sheet += "_left"
-            else:
-                sprite_sheet += "_right"
-
-        else:
-            sprite_sheet += "_dead"
-
     def update_sprite(self):
         sprite_sheet = "characters"
 
