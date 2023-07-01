@@ -3,8 +3,8 @@ import pygame
 from pygame import K_LEFT, K_RIGHT
 from time import sleep
 
-from Utilities.Collider import Collider
-from setup import (
+from src.Utilities.Collider import Collider
+from src.settings import (
     SoundPlayer,
     WINDOW_WIDTH,
     TEXT_COLOR,

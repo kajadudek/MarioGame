@@ -1,15 +1,14 @@
 import json
 from os.path import join
 
-from Background.Castle import Castle
-from Background.Pipe import Pipe
-from setup import TILE_SIZE
-
-from Background.Coin import Coin
-from Background.MysteryTile import MysteryTile
-from Background.Tile import Tile
-from Player.Goomba import Goomba
-from Player.KoopaTroopa import KoopaTroopa
+from src.Background.Castle import Castle
+from src.Background.Pipe import Pipe
+from src.settings import TILE_SIZE
+from src.Background.Coin import Coin
+from src.Background.MysteryTile import MysteryTile
+from src.Background.Tile import Tile
+from src.Player.Goomba import Goomba
+from src.Player.KoopaTroopa import KoopaTroopa
 
 
 class LevelCreator:

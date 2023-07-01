@@ -1,40 +1,47 @@
-from os import listdir
-from os.path import join
-
 import pygame
 
-from setup import (
+from src.settings import (
     TEXT_COLOR,
     MENU_MARIO_FONT,
+    SoundPlayer,
     WINDOW_WIDTH,
     SELECTED_TEXT_COLOR,
 )
 
 
-def create_list_of_levels():
-    path = join("./assets", "Maps")
-    number_of_options = len(listdir(path))
-    list_of_options = {}
-
-    for i in range(1, number_of_options + 1):
-        list_of_options["Level " + str(i)] = TEXT_COLOR
-
-    return list_of_options
-
-
-class LevelsScreen:
+class Settings:
     def __init__(self):
         self.active = False
         self.current_option = 0
-        self.list_of_options = create_list_of_levels()
+        self.list_of_options = {
+            "MUSIC:": TEXT_COLOR,
+            "SOUND EFFECTS:": TEXT_COLOR,
+            "BACK": TEXT_COLOR,
+        }
         self.number_of_options = len(self.list_of_options)
 
     def draw(self, screen):
         # Draw level options
         start_pos = 350
-        for i in self.list_of_options:
+        settings = [" ON", " ON", ""]
+
+        if SoundPlayer.musicOn:
+            settings[0] = " ON"
+        else:
+            settings[0] = " OFF"
+
+        if SoundPlayer.soundOn:
+            settings[1] = " ON"
+        else:
+            settings[1] = " OFF"
+
+        for count, option in enumerate(self.list_of_options):
             screen.blit(
-                MENU_MARIO_FONT.render(i, True, self.list_of_options.get(i)),
+                MENU_MARIO_FONT.render(
+                    option + settings[count],
+                    True,
+                    self.list_of_options.get(option),
+                ),
                 ((WINDOW_WIDTH - 500) / 2 + 20, start_pos),
             )
 
@@ -46,9 +53,14 @@ class LevelsScreen:
             self.list_of_options[i] = TEXT_COLOR
 
         # Change color of selected option
-        self.list_of_options[
-            "Level " + str(self.current_option + 1)
-        ] = SELECTED_TEXT_COLOR
+        if self.current_option == 0:
+            selected = "MUSIC:"
+        elif self.current_option == 1:
+            selected = "SOUND EFFECTS:"
+        else:
+            selected = "BACK"
+
+        self.list_of_options[selected] = SELECTED_TEXT_COLOR
 
         events = pygame.event.get()
 
@@ -69,9 +81,20 @@ class LevelsScreen:
 
                 # Confirm option
                 if e.key == pygame.K_RETURN:
-                    return self.current_option + 1
+                    self.option_action()
+
+                    if self.current_option == 2:
+                        return True
 
             # Quit the game
             if e.type == pygame.QUIT:
                 pygame.quit()
                 exit()
+
+    def option_action(self):
+        if self.current_option == 0:
+            SoundPlayer.musicOn = not SoundPlayer.musicOn
+        elif self.current_option == 1:
+            SoundPlayer.soundOn = not SoundPlayer.soundOn
+        else:
+            self.active = False

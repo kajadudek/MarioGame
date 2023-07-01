@@ -1,9 +1,9 @@
 import pygame
 
-from MenuScreens.menu import Menu
-from Player.Player import Player
-from game_engine import GameEngine
-from setup import WINDOW_WIDTH, WINDOW_HEIGHT, icon, FPS, BACKGROUND_COLOR
+from src.MenuScreens.menu import Menu
+from src.Player.Player import Player
+from src.game_engine import GameEngine
+from src.settings import WINDOW_WIDTH, WINDOW_HEIGHT, icon, FPS, BACKGROUND_COLOR
 
 
 def main():

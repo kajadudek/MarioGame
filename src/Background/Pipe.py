@@ -1,7 +1,7 @@
 from os.path import join
 
 import pygame
-from Background.Tile import Tile
+from src.Background.Tile import Tile
 
 
 class Pipe(Tile):

@@ -1,5 +1,5 @@
-from Player.Enemy import Enemy
-from setup import SpriteLoader, ENEMY_ANIMATION_DELAY, ENEMY_SPEED
+from src.Player.Enemy import Enemy
+from src.settings import SpriteLoader, ENEMY_ANIMATION_DELAY, ENEMY_SPEED
 
 
 class Goomba(Enemy):

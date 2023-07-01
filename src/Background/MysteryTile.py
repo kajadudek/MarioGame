@@ -1,38 +1,32 @@
-from Background.Tile import Tile
-from setup import (
-    SoundPlayer,
-    SpriteLoader,
-    COIN_SIZE,
-    ANIMATION_DELAY,
-    TILE_SIZE,
-)
+from src.settings import SoundPlayer, SpriteLoader, ANIMATION_DELAY
+from src.Background.Tile import Tile
 
 
-class Coin(Tile):
+class MysteryTile(Tile):
     def __init__(self, coordinates):
         super().__init__(coordinates)
         self.animation_count = 0
         self.sprites = self.load_sprites()
         self.active = True
-        self.collision = False
+        self.points = 50
         self.sound = SoundPlayer
 
     def load_sprites(self):
-        return SpriteLoader.coin_sprites(COIN_SIZE)
+        return SpriteLoader.mystery_tile_sprites(self.width, self.height)
 
     def update_sprite(self):
-        sprite_sheet = "tiles_coin"
+        sprite_sheet = "tiles"
+
+        if self.active:
+            sprite_sheet += "_coin_inside"
+        else:
+            sprite_sheet += "_deactivated"
 
         sprites = self.sprites[sprite_sheet]
         sprite_index = (self.animation_count // ANIMATION_DELAY) % len(sprites)
         self.sprite = sprites[sprite_index]
         self.animation_count += 1
-        self.rect = self.sprite.get_rect(
-            topleft=(
-                self.rect.x + (TILE_SIZE[0] - COIN_SIZE[0]) / 2,
-                self.rect.y + (TILE_SIZE[0] - COIN_SIZE[0]) / 2,
-            )
-        )
+        self.rect = self.sprite.get_rect(topleft=(self.rect.x, self.rect.y))
 
     def hit(self):
         self.active = False

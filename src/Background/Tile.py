@@ -1,6 +1,6 @@
 import pygame
 
-from setup import TILE_SIZE
+from src.settings import TILE_SIZE
 
 
 class Tile:

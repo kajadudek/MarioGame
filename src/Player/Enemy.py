@@ -1,5 +1,5 @@
-from Player.Player import Player
-from setup import WINDOW_WIDTH, ENEMY_ANIMATION_DELAY, ENEMY_SPEED, GRAVITY
+from src.Player.Player import Player
+from src.settings import WINDOW_WIDTH, GRAVITY
 
 
 class Enemy(Player):

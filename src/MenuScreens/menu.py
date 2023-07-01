@@ -3,9 +3,9 @@ from os.path import join
 
 import pygame
 
-from MenuScreens.levels_screen import LevelsScreen
-from MenuScreens.settings import Settings
-from setup import (
+from src.MenuScreens.levels_screen import LevelsScreen
+from src.MenuScreens.settings import Settings
+from src.settings import (
     TEXT_COLOR,
     SoundPlayer,
     WINDOW_WIDTH,

@@ -2,7 +2,7 @@ import time
 
 import pygame.draw
 import pygame
-from setup import (
+from src.settings import (
     SpriteLoader,
     SoundPlayer,
     GRAVITY,

@@ -1,7 +1,7 @@
 import pygame
 
-from Background.Castle import Castle
-from setup import (
+from src.Background.Castle import Castle
+from src.settings import (
     SoundPlayer,
     WINDOW_HEIGHT,
     FALL_COLLISION_TOLERANCE,
